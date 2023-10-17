@@ -22,14 +22,7 @@ public class BlogTest : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.GetAsync("/");
 
         // ALORS on obtient un Hello World dans le premier titre
-        //Assert.SelectorContains("Hello, World", "body>h1", html);
-
-        response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStreamAsync();
-        var html = new HtmlDocument();
-        html.Load(content);
-
-        var h1 = html.DocumentNode.QuerySelector("body>h1");
-        Assert.Contains("Hello, World", h1.InnerText);
+        Assert.HtmlContainsAt("Hello, World", content, "body>h1");
     }
 }
