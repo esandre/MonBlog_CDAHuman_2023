@@ -27,7 +27,7 @@ namespace MonBlog.Controllers
         public IActionResult GetArticles(int limit = 20)
         {
             var articles = _articlesRepository.FetchAllArticles();
-            var listItems = articles.Select(article => $"<li>{article.Titre}</li>");
+            var listItems = articles.Select(article => $"<li><a>{article.Titre}</a></li>");
 
             return Content("<html><head>" +
                            $"<meta charset=\"{Encoding.Default.BodyName}\">" +

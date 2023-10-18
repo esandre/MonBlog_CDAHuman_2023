@@ -74,10 +74,10 @@ public class BlogTest : IClassFixture<WebApplicationFactory<Program>>
         // QUAND on fait GET /articles
         var response = await client.GetAsync("/articles");
 
-        // ALORS on obtient une <ul> ayant un <li> par article contenant son titre
+        // ALORS on obtient une <ul> ayant un <li><a> par article contenant son titre
         var content = await response.Content.ReadAsStringAsync();
 
         foreach (var title in ExampleArticlesRepository.Titles)
-            Assert.HtmlContainsAt(title, content, "#articles>ul>li");
+            Assert.HtmlContainsAt(title, content, "#articles>ul>li>a");
     }
 }
