@@ -1,5 +1,6 @@
-using MonBlog.Ports;
+using MonBlog.Database.Abstractions;
 using MonBlog.Prototype;
+using MonBlog.Sqlite;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<IArticlesRepository>(new InMemoryArticlesRepository());
+
+builder.Services.AddSingleton<IArticlesRepository>(new SqliteArticlesRepository());
 
 var app = builder.Build();
 

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
-using MonBlog.Models;
-using MonBlog.Ports;
+using MonBlog.Database.Abstractions;
 
 namespace MonBlog.Sqlite
 {

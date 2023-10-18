@@ -1,6 +1,4 @@
-﻿using MonBlog.Models;
-
-namespace MonBlog.Ports;
+﻿namespace MonBlog.Database.Abstractions;
 
 public interface IArticlesRepository
 {
