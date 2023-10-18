@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using MonBlog.Ports;
 using MonBlog.Test.Utilities;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace MonBlog.Test;
@@ -75,9 +74,13 @@ public class BlogTest : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.GetAsync("/articles");
 
         // ALORS on obtient une <ul> ayant un <li><a> par article contenant son titre
+        // ET pointant vers le permalien de l'article
         var content = await response.Content.ReadAsStringAsync();
 
-        foreach (var title in ExampleArticlesRepository.Titles)
+        foreach (var (permalink, title) in ExampleArticlesRepository.PermalinksAndTitles)
+        {
             Assert.HtmlContainsAt(title, content, "#articles>ul>li>a");
+            Assert.HtmlAttributeHasValue("/articles/" + permalink, content, "#articles>ul>li>a", "href");
+        }
     }
 }

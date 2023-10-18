@@ -1,3 +1,3 @@
 ﻿namespace MonBlog.Models;
 
-public record Article(string Titre);
+public record Article(string Permalink, string Titre);
