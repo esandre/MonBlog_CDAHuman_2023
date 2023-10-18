@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using MonBlog.Models;
 using MonBlog.Ports;
 
 namespace MonBlog.Controllers
@@ -21,6 +22,13 @@ namespace MonBlog.Controllers
             return Content("<html><body>" +
                            "<h1>Hello, World</h1>" +
                            "</body></html>", "text/html");
+        }
+
+        [HttpGet("/articles/{permalink}")]
+        public IActionResult GetArticle(string permalink)
+        {
+            var article = _articlesRepository.FindByPermalink(new Permalink(permalink));
+            return Content(.ToString());
         }
 
         [HttpGet("/articles")]
