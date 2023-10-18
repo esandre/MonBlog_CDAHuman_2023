@@ -12,7 +12,20 @@ public partial class Assert
         var html = new HtmlDocument();
         html.Load(documentStream);
 
-        var selected = html.DocumentNode.QuerySelector("body>h1");
+        var selected = html.DocumentNode.QuerySelector(cssSelector);
         Contains(expectedInnerText, selected.InnerText);
+    }
+
+    public static void CountChildrenOfType(
+        ushort expectedNumber, 
+        Stream documentStream, 
+        string parentSelector, 
+        string childType)
+    {
+        var html = new HtmlDocument();
+        html.Load(documentStream);
+
+        var selected = html.DocumentNode.QuerySelector(parentSelector);
+        Equal(expectedNumber, selected.ChildNodes.Count(child => child.Name == childType));
     }
 }
