@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using MonBlog.Ports;
 
@@ -23,15 +24,16 @@ namespace MonBlog.Controllers
         }
 
         [HttpGet("/articles")]
-        public IActionResult GetArticles()
+        public IActionResult GetArticles(int limit = 20)
         {
-            var articles = _articlesRepository.FetchArticles();
+            var articles = _articlesRepository.FetchAllArticles();
+            var listItems = articles.Select(article => $"<li>{article.Titre}</li>");
 
-            var content = string.Concat(Enumerable.Repeat("<li></li>", articles.Count()));
-
-            return Content("<html><body>"
+            return Content("<html><head>" +
+                           $"<meta charset=\"{Encoding.Default.BodyName}\">" +
+                           "</head><body>"
                            + "<div id=\"articles\">" 
-                           + $"<ul>{content}</ul>" 
+                           + $"<ul>{string.Concat(listItems)}</ul>" 
                            + "</div>"
                            + "</body></html>",
                 "text/html");

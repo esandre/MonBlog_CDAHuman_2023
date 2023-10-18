@@ -1,14 +1,16 @@
-﻿using MonBlog.Ports;
+﻿using MonBlog.Models;
+using MonBlog.Ports;
 
 namespace MonBlog.Test.Utilities;
 
 internal class ExampleArticlesRepository : IArticlesRepository
 {
-    public ushort NombreArticles => 2;
+    public static readonly IEnumerable<string> Titles 
+        = new[] { "Premier article", "Second article", "Troisième article" };
 
     /// <inheritdoc />
-    public IEnumerable<object> FetchArticles()
+    public IEnumerable<Article> FetchAllArticles()
     {
-        return new[] { new object(), new object() };
+        return Titles.Select(title => new Article(title));
     }
 }

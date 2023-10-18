@@ -1,6 +1,8 @@
-﻿namespace MonBlog.Ports;
+﻿using MonBlog.Models;
+
+namespace MonBlog.Ports;
 
 public interface IArticlesRepository
 {
-    IEnumerable<object> FetchArticles();
+    IEnumerable<Article> FetchAllArticles();
 }

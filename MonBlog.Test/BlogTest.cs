@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using MonBlog.Ports;
 using MonBlog.Test.Utilities;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace MonBlog.Test;
 
@@ -23,8 +25,18 @@ public class BlogTest : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.GetAsync("/");
 
         // ALORS on obtient un Hello World dans le premier titre
-        var content = await response.Content.ReadAsStreamAsync();
+        var content = await response.Content.ReadAsStringAsync();
         Assert.HtmlContainsAt("Hello, World", content, "body>h1");
+    }
+
+    [Fact]
+    public async Task MetaCharsetPresent()
+    {
+        var client = _factory.CreateClient();
+        var response = await client.GetAsync("/articles");
+
+        var content = await response.Content.ReadAsStringAsync();
+        Assert.HtmlAttributeHasValue(Encoding.Default.BodyName, content, "meta", "charset");
     }
 
     [Fact]
@@ -42,7 +54,7 @@ public class BlogTest : IClassFixture<WebApplicationFactory<Program>>
         var response = await client.GetAsync("/articles");
 
         // ALORS on obtient une <ul> vide
-        var content = await response.Content.ReadAsStreamAsync();
+        var content = await response.Content.ReadAsStringAsync();
         Assert.HtmlContainsAt("", content, "#articles>ul");
     }
 
@@ -62,8 +74,10 @@ public class BlogTest : IClassFixture<WebApplicationFactory<Program>>
         // QUAND on fait GET /articles
         var response = await client.GetAsync("/articles");
 
-        // ALORS on obtient une <ul> ayant un <li> par article
-        var content = await response.Content.ReadAsStreamAsync();
-        Assert.CountChildrenOfType(repo.NombreArticles, content, "#articles>ul", "li");
+        // ALORS on obtient une <ul> ayant un <li> par article contenant son titre
+        var content = await response.Content.ReadAsStringAsync();
+
+        foreach (var title in ExampleArticlesRepository.Titles)
+            Assert.HtmlContainsAt(title, content, "#articles>ul>li");
     }
 }

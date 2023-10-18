@@ -1,12 +1,13 @@
-﻿using MonBlog.Ports;
+﻿using MonBlog.Models;
+using MonBlog.Ports;
 
 namespace MonBlog.Test.Utilities;
 
 internal class EmptyArticlesRepository : IArticlesRepository
 {
     /// <inheritdoc />
-    public IEnumerable<object> FetchArticles()
+    public IEnumerable<Article> FetchAllArticles()
     {
-        return Enumerable.Empty<object>();
+        return Enumerable.Empty<Article>();
     }
 }

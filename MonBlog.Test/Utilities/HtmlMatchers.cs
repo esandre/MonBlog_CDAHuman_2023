@@ -7,13 +7,22 @@ namespace Xunit;
 // ReSharper disable once ClassNeverInstantiated.Global
 public partial class Assert
 {
-    public static void HtmlContainsAt(string expectedInnerText, Stream documentStream, string cssSelector)
+    public static void HtmlContainsAt(string expectedInnerText, string documentContent, string cssSelector)
     {
         var html = new HtmlDocument();
-        html.Load(documentStream);
+        html.LoadHtml(documentContent);
 
-        var selected = html.DocumentNode.QuerySelector(cssSelector);
-        Contains(expectedInnerText, selected.InnerText);
+        var selected = html.DocumentNode.QuerySelectorAll(cssSelector);
+        Assert.Contains(selected, node => node.InnerText == expectedInnerText);
+    }
+
+    public static void HtmlAttributeHasValue(string expectedValue, string documentContent, string cssSelector, string attributeName)
+    {
+        var html = new HtmlDocument();
+        html.LoadHtml(documentContent);
+
+        var selected = html.DocumentNode.QuerySelectorAll(cssSelector);
+        Assert.Contains(selected, node => node.GetAttributeValue(attributeName, string.Empty) == expectedValue);
     }
 
     public static void CountChildrenOfType(
