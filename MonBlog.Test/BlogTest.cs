@@ -18,7 +18,7 @@ public class BlogTest : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task HelloWorld()
     {
-        var client = _factory.CreateClient();
+        var client = ClientBuilder.Default(_factory);
 
         // QUAND on fait GET /
         var response = await client.GetAsync("/");
@@ -31,7 +31,7 @@ public class BlogTest : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task MetaCharsetPresent()
     {
-        var client = _factory.CreateClient();
+        var client = ClientBuilder.Default(_factory);
         var response = await client.GetAsync("/articles");
 
         var content = await response.Content.ReadAsStringAsync();
@@ -42,12 +42,9 @@ public class BlogTest : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetWithoutArticles()
     {
         // ETANT DONNE un blog sans articles
-        var customFactory = _factory.WithWebHostBuilder(
-            builder => builder.ConfigureServices(
-                container => container.AddSingleton<IArticlesRepository>(new EmptyArticlesRepository()))
-        );
-
-        var client = customFactory.CreateClient();
+        var client = new ClientBuilder(_factory)
+            .ReplacingService<IArticlesRepository>(new EmptyArticlesRepository())
+            .Build();
 
         // QUAND on fait GET /articles
         var response = await client.GetAsync("/articles");
@@ -62,13 +59,9 @@ public class BlogTest : IClassFixture<WebApplicationFactory<Program>>
     {
         // ETANT DONNE un blog ayant des articles
         var repo = new ExampleArticlesRepository();
-
-        var customFactory = _factory.WithWebHostBuilder(
-            builder => builder.ConfigureServices(
-                container => container.AddSingleton<IArticlesRepository>(repo))
-        );
-
-        var client = customFactory.CreateClient();
+        var client = new ClientBuilder(_factory)
+            .ReplacingService<IArticlesRepository>(repo)
+            .Build();
 
         // QUAND on fait GET /articles
         var response = await client.GetAsync("/articles");
