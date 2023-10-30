@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using MonBlog.Ports;
 
@@ -21,6 +22,21 @@ public class BlogController : ControllerBase
                        "<h1>Hello, World</h1>" +
                        "</body></html>", "text/html");
     }
+
+    public IActionResult FillForm([FromBody] FormDataInputContract input)
+    {
+        return Ok();
+    }
+
+    /**
+     * {
+     *  userId= "test",
+     *  dateOfTheEvent= "2023-05-12",
+     *  nomberOfBugs= 8
+     * }
+     */
+
+    public record FormDataInputContract(string UserId, DateTime DateOfTheEvent, int? NumberOfBugs);
 
     [HttpGet("/articles")]
     public IActionResult GetArticles()
