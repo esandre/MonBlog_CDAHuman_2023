@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using MonBlog.Ports;
+using MonBlog.Presenters;
 
 namespace MonBlog.Controllers;
 
@@ -28,7 +29,7 @@ public class BlogController : ControllerBase
         var articles = _articlesRepository.FetchAllArticles();
 
         var listItems = articles.Select(
-            article => $"<li><a href=\"/articles/{article.Permalink}\">{article.Titre}</a></li>"
+            article => new ArticlePermalinkPresenter(article)
         );
 
         return Content("<html><head>" +
