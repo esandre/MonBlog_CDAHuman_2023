@@ -21,7 +21,7 @@ internal class ClientBuilder
         return new ClientBuilder(
             _aspNetBuilder.WithWebHostBuilder(
                 builder => builder.ConfigureServices(
-                    container => container.AddSingleton<TDependency>(replacement)
+                    container => container.AddSingleton(replacement)
                 )
             )
         );
