@@ -57,6 +57,8 @@ public class BlogController : ControllerBase
         try
         {
             var titre = _articlesRepository.FetchTitle(new Permalink(permalink));
+            if (titre is null) 
+                return NotFound($"Aucun article ayant le permalien {permalink} n'a été trouvé.");
 
             return Content("<html><head>" +
                            $"<meta charset=\"{Encoding.Default.BodyName}\">" +

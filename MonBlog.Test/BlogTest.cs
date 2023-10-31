@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
 using MonBlog.Ports;
 using MonBlog.Test.Utilities;
@@ -96,4 +97,21 @@ public class BlogTest : IClassFixture<WebApplicationFactory<Program>>
         var content = await response.Content.ReadAsStringAsync();
         Assert.HtmlContainsAt(title, content, "body>article>h1");
     }
+
+    [Fact]
+    public async Task GetOneArticleNotFound()
+    {
+        // ETANT DONNE un blog sans articles
+        var client = new ClientBuilder(_factory)
+            .ReplacingService<IArticlesRepository>(new EmptyArticlesRepository())
+            .Build();
+
+        // QUAND on fait GET /articles/<permalien>
+        const string permalink = "aa";
+        var response = await client.GetAsync($"/articles/{permalink}");
+
+        // ALORS on obtient un code de retour 404 Not Found
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
 }
