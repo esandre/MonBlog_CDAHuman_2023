@@ -56,18 +56,23 @@ public class BlogController : ControllerBase
     {
         try
         {
-            var titre = _articlesRepository.FetchTitle(new Permalink(permalink));
-            if (titre is null) 
-                return NotFound($"Aucun article ayant le permalien {permalink} n'a été trouvé.");
+            return _articlesRepository
+                .FetchTitle(new Permalink(permalink))
+                .Map<IActionResult>(
+                    MakeHtmlPage,
+                    () => NotFound($"Aucun article ayant le permalien {permalink} n'a été trouvé."));
 
-            return Content("<html><head>" +
-                           $"<meta charset=\"{Encoding.Default.BodyName}\">" +
-                           "</head><body>"
-                           + "<article>"
-                           + $"<h1>{titre}</h1>"
-                           + "</article>"
-                           + "</body></html>",
-                "text/html");
+            ContentResult MakeHtmlPage(string titre)
+            {
+                return Content("<html><head>" +
+                               $"<meta charset=\"{Encoding.Default.BodyName}\">" +
+                               "</head><body>"
+                               + "<article>"
+                               + $"<h1>{titre}</h1>"
+                               + "</article>"
+                               + "</body></html>",
+                    "text/html");
+            }
         } 
         catch(ArgumentException e)
         {
