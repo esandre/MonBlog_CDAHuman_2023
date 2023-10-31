@@ -20,5 +20,13 @@ public class InMemoryArticlesRepository : IArticlesRepository
     }
 
     /// <inheritdoc />
-    public string FetchTitle(Permalink permalink) => PermalinksAndTitles[permalink.Value];
+    public Maybe<string> FetchTitle(Permalink permalink)
+    {
+        var permalinkValue = permalink.Value;
+
+        return PermalinksAndTitles.TryGetValue(
+            permalinkValue, out var title) 
+            ? title 
+            : Maybe<string>.Empty;
+    }
 }

@@ -20,7 +20,7 @@ internal class ExampleArticlesRepository : IArticlesRepository
     }
 
     /// <inheritdoc />
-    public string? FetchTitle(Permalink permalink)
+    public Maybe<string> FetchTitle(Permalink permalink)
     {
         try
         {
@@ -28,7 +28,7 @@ internal class ExampleArticlesRepository : IArticlesRepository
         }
         catch (KeyNotFoundException)
         {
-            return null;
+            return Maybe<string>.Empty;
         }
     }
 }

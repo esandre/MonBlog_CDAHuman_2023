@@ -9,5 +9,5 @@ internal class EmptyArticlesRepository : IArticlesRepository
     public IEnumerable<Article> FetchAllArticles() => Enumerable.Empty<Article>();
 
     /// <inheritdoc />
-    public string? FetchTitle(Permalink permalink) => null;
+    public Maybe<string> FetchTitle(Permalink permalink) => Maybe<string>.Empty;
 }
