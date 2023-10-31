@@ -43,18 +43,33 @@ public class BlogController : ControllerBase
             "text/html");
     }
 
+    /// <summary>
+    /// Récupère un article selon son permalien
+    /// </summary>
+    /// <param name="permalink">Le permalien, un string de 2 à 36 caractères, lettres minuscules, chiffres et tirets</param>
+    /// <response code="200">Retourne le HTML contenant le titre de l'article</response>
+    /// <response code="400">Le permalien est mal formé</response>
     [HttpGet("/articles/{permalink}")]
+    [ProducesResponseType(200, Type = typeof(string))]
+    [ProducesResponseType(400, Type = typeof(string))]
     public IActionResult GetArticle(string permalink)
     {
-        var titre = _articlesRepository.FetchTitle(new Permalink(permalink));
+        try
+        {
+            var titre = _articlesRepository.FetchTitle(new Permalink(permalink));
 
-        return Content("<html><head>" +
-                       $"<meta charset=\"{Encoding.Default.BodyName}\">" +
-                       "</head><body>"
-                       + "<article>"
-                       + $"<h1>{titre}</h1>"
-                       + "</article>"
-                       + "</body></html>",
-            "text/html");
+            return Content("<html><head>" +
+                           $"<meta charset=\"{Encoding.Default.BodyName}\">" +
+                           "</head><body>"
+                           + "<article>"
+                           + $"<h1>{titre}</h1>"
+                           + "</article>"
+                           + "</body></html>",
+                "text/html");
+        } 
+        catch(ArgumentException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }
