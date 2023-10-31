@@ -69,10 +69,31 @@ public class BlogTest : IClassFixture<WebApplicationFactory<Program>>
         // ET pointant vers le permalien de l'article
         var content = await response.Content.ReadAsStringAsync();
 
-        foreach (var (permalink, title) in ExampleArticlesRepository.PermalinksAndTitles)
+        foreach (var (permalink, title) in repo.PermalinksAndTitles)
         {
             Assert.HtmlContainsAt(title, content, "#articles>ul>li>a");
             Assert.HtmlAttributeHasValue("/articles/" + permalink, content, "#articles>ul>li>a", "href");
         }
+    }
+
+    [Fact]
+    public async Task GetOneArticle()
+    {
+        // ETANT DONNE un blog ayant un article ayant pour permalien <permalien>
+        var repo = new ExampleArticlesRepository(1);
+        var client = new ClientBuilder(_factory)
+            .ReplacingService<IArticlesRepository>(repo)
+            .Build();
+
+        var article = repo.PermalinksAndTitles.Single();
+        var permalink = article.Key;
+        var title = article.Value;
+
+        // QUAND on fait GET /articles/<permalien>
+        var response = await client.GetAsync($"/articles/{permalink}");
+
+        // ALORS on obtient un <article> contenant le titre en <h1>
+        var content = await response.Content.ReadAsStringAsync();
+        Assert.HtmlContainsAt(title, content, "body>article>h1");
     }
 }

@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using MonBlog.Models;
 using MonBlog.Ports;
 using MonBlog.Presenters;
 
@@ -38,6 +39,21 @@ public class BlogController : ControllerBase
                        + "<div id=\"articles\">" 
                        + $"<ul>{string.Concat(listItems)}</ul>" 
                        + "</div>"
+                       + "</body></html>",
+            "text/html");
+    }
+
+    [HttpGet("/articles/{permalink}")]
+    public IActionResult GetArticle(string permalink)
+    {
+        var titre = _articlesRepository.FetchTitle(new Permalink(permalink));
+
+        return Content("<html><head>" +
+                       $"<meta charset=\"{Encoding.Default.BodyName}\">" +
+                       "</head><body>"
+                       + "<article>"
+                       + $"<h1>{titre}</h1>"
+                       + "</article>"
                        + "</body></html>",
             "text/html");
     }

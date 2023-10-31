@@ -18,4 +18,7 @@ public class InMemoryArticlesRepository : IArticlesRepository
     {
         return PermalinksAndTitles.Select(pair => new Article(pair.Key, pair.Value));
     }
+
+    /// <inheritdoc />
+    public string FetchTitle(Permalink permalink) => PermalinksAndTitles[permalink.Value];
 }
